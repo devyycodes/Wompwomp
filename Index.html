@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Valentine Surprise</title>
+    <style>
+        /* --- 1. THEME COLORS --- */
+        body {
+            /* Change #3d3d1a to #4a0000 for a deep red theme */
+            background-color: #3d3d1a; 
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 1s ease;
+        }
+
+        /* --- 2. ENVELOPE STYLING --- */
+        #envelope-wrapper {
+            text-align: center;
+            z-index: 2000;
+        }
+
+        .envelope {
+            position: relative;
+            width: 280px;
+            height: 180px;
+            background: #bab86c; /* Front color of envelope */
+            margin: 0 auto 30px;
+            border-radius: 0 0 5px 5px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            cursor: pointer;
+        }
+
+        .envelope::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-left: 140px solid transparent;
+            border-right: 140px solid transparent;
+            /* This creates the top triangle flap */
+            border-top: 110px solid #8e8c4d; 
+            transform-origin: top;
+            transition: transform 0.6s ease;
+            z-index: 2;
+        }
+
+        .envelope.open::before {
+            transform: rotateX(180deg); /* Flips the flap up */
+        }
+
+        /* The Wax Seal - Change "D" to your initial in the HTML below */
+        .seal {
+            position: absolute;
+            top: 75px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            background: olive;
+            border-radius: 50%;
+            border: 2px solid #2e3011;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #bab86c;
+            font-family: 'Cursive', cursive;
+            font-size: 1.8rem;
+        }
+
+        /* --- 3. INTERACTIVE BUTTONS --- */
+        #yes-btn { 
+            background-color: #ff4d6d; 
+            color: white; 
+            position: absolute; 
+            left: 25%; 
+            bottom: 40px; 
+            transform: translateX(-50%); 
+            z-index: 5;
+            transition: transform 0.2s ease; /* Smooth growth when No is hovered */
+        }
+
+        #no-btn { 
+            background-color: #7a7a7a; 
+            color: white; 
+            position: absolute; 
+            right: 25%; 
+            bottom: 40px; 
+            transform: translateX(50%); 
+            z-index: 10;
+        }
+
+        /* --- 4. ANIMATIONS --- */
+        .heart { 
+            position: absolute; 
+            color: #ff4d6d; 
+            animation: floatUp 3s linear forwards; 
+            pointer-events: none; 
+            z-index: 100; 
+        }
+
+        @keyframes floatUp { 
+            0% { transform: translateY(0); opacity: 1; } 
+            100% { transform: translateY(-100vh); opacity: 0; } 
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="main-song" loop><source src="co2.mp3" type="audio/mpeg"></audio>
+
+    <div id="envelope-wrapper">
+        <div class="envelope" id="envelope-icon" onclick="openEnvelope()">
+            <div class="seal">D</div> 
+        </div>
+        <h2 style="color: #bab86c; font-style: italic;">A handwritten note for you...</h2>
+        <button class="primary-btn" onclick="openEnvelope()">Open only if you're free/single</button>
+    </div>
+
+    <div id="main-container" style="display: none; opacity: 0; text-align: center;">
+        <div class="top-nav">
+            <button class="nav-btn" onclick="togglePopup('why-popup')">Why Me? ✨</button>
+            <button class="nav-btn" onclick="togglePopup('tc-popup')">T&C 📜</button>
+        </div>
+
+        <div class="card" id="main-card" style="background-color: #bab86c; padding: 50px; border-radius: 20px; display: inline-block;">
+            <h1>Will you be my valentine?</h1>
+            <button id="yes-btn">Yes</button>
+            <button id="no-btn">No</button>
+        </div>
+    </div>
+
+    <script>
+        const yesBtn = document.getElementById('yes-btn');
+        const noBtn = document.getElementById('no-btn');
+        const song = document.getElementById('main-song');
+        let yesScale = 1;
+
+        // Transitions from Envelope to the Card
+        function openEnvelope() {
+            document.getElementById('envelope-icon').classList.add('open');
+            setTimeout(() => {
+                document.getElementById('envelope-wrapper').style.display = 'none';
+                document.body.style.backgroundColor = 'olive';
+                document.getElementById('main-container').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('main-container').style.opacity = '1';
+                    song.play(); // Starts music
+                }, 50);
+            }, 1400);
+        }
+
+        // Logic to make the 'No' button run away and 'Yes' grow bigger
+        function moveNoButton() {
+            // Calculate random position within window bounds
+            const maxX = window.innerWidth - noBtn.offsetWidth;
+            const maxY = window.innerHeight - noBtn.offsetHeight;
+            noBtn.style.left = Math.random() * maxX + 'px';
+            noBtn.style.top = Math.random() * maxY + 'px';
+            
+            // Make the 'Yes' button bigger every time they try to click 'No'
+            if (yesScale < 6) {
+                yesScale += 0.4;
+                yesBtn.style.transform = `translateX(-50%) scale(${yesScale})`;
+            }
+        }
+
+        // Event Listeners for the "No" button
+        noBtn.addEventListener('mouseenter', moveNoButton);
+
+        // Success State (When "Yes" is clicked)
+        yesBtn.addEventListener('click', () => {
+            document.getElementById('main-card').innerHTML = `
+                <div style="font-size:4rem">💖</div>
+                <h1>Yay!</h1>
+                <p>See you on the 14th! ❤️</p>
+                <a href="coupons.pdf" download style="color:white; background:#2e3011; padding:10px; border-radius:5px; text-decoration:none;">Claim Gift 🎁</a>
+            `;
+
+            // Heart Rain effect
+            for (let i = 0; i < 50; i++) {
+                setTimeout(createHeart, i * 100);
+            }
+        });
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.bottom = '0';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
