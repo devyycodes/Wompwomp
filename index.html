@@ -19,11 +19,7 @@
         }
 
         /* --- 2. ENVELOPE STYLING --- */
-        #envelope-wrapper {
-            text-align: center;
-            z-index: 2000;
-        }
-
+        #envelope-wrapper { text-align: center; z-index: 2000; }
         .envelope {
             position: relative;
             width: 280px;
@@ -34,12 +30,10 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.4);
             cursor: pointer;
         }
-
         .envelope::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
+            top: 0; left: 0;
             border-left: 140px solid transparent;
             border-right: 140px solid transparent;
             border-top: 110px solid #8e8c4d; 
@@ -47,18 +41,12 @@
             transition: transform 0.6s ease;
             z-index: 2;
         }
-
-        .envelope.open::before {
-            transform: rotateX(180deg);
-        }
-
+        .envelope.open::before { transform: rotateX(180deg); }
         .seal {
             position: absolute;
-            top: 75px;
-            left: 50%;
+            top: 75px; left: 50%;
             transform: translateX(-50%);
-            width: 50px;
-            height: 50px;
+            width: 50px; height: 50px;
             background: olive;
             border-radius: 50%;
             border: 2px solid #2e3011;
@@ -73,13 +61,11 @@
         /* --- 3. RESPONSIVE NAVIGATION --- */
         .top-nav {
             position: fixed;
-            top: 15px;
-            right: 15px;
+            top: 15px; right: 15px;
             display: flex;
             gap: 10px;
             z-index: 3000;
         }
-
         .nav-btn {
             background: #bab86c;
             color: #3d3d1a;
@@ -88,52 +74,60 @@
             border-radius: 20px;
             font-weight: bold;
             cursor: pointer;
-            font-size: 0.75rem; /* Small but visible */
+            font-size: 0.75rem;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            white-space: nowrap;
         }
 
-        /* Adjust for very small screens */
-        @media (max-width: 400px) {
-            .top-nav {
-                top: 10px;
-                right: 10px;
-                gap: 5px;
-            }
-            .nav-btn {
-                padding: 5px 8px;
-                font-size: 0.65rem;
-            }
-        }
-
-        /* --- 4. RECORD PLAYER --- */
-        #music-record {
+        /* --- 4. REALISTIC VINYL & SPOTIFY MARQUEE --- */
+        #player-container {
             position: fixed;
             bottom: 20px;
             left: 20px;
-            width: 55px;
-            height: 55px;
-            background: radial-gradient(circle, #333 20%, #111 21%, #333 25%, #111 26%, #333 30%, #111 31%);
-            border: 2px solid #bab86c;
-            border-radius: 50%;
-            display: none; 
-            animation: spin 4s linear infinite;
+            display: none; /* Shown after envelope opens */
+            align-items: center;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 8px 15px 8px 8px;
+            border-radius: 40px;
             z-index: 3000;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(186, 184, 108, 0.3);
         }
 
-        #music-record::after {
-            content: '';
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 10px; height: 10px;
-            background: #bab86c;
+        .vinyl-record {
+            width: 50px;
+            height: 50px;
+            background: 
+                radial-gradient(circle, #bab86c 12%, transparent 12.5%), /* Center hole */
+                radial-gradient(circle, #222 25%, #111 25.5%, #111 30%, #222 30.5%), /* Label area */
+                repeating-radial-gradient(circle, #111, #111 2px, #222 3px); /* Realistic grooves */
             border-radius: 50%;
+            border: 2px solid #000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            animation: spin 4s linear infinite;
+        }
+
+        .now-playing-box {
+            width: 120px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .now-playing-text {
+            display: inline-block;
+            color: #bab86c;
+            font-size: 0.8rem;
+            font-weight: bold;
+            animation: marquee 8s linear infinite;
         }
 
         @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
 
-        /* --- 5. POPUP ANIMATIONS --- */
+        /* --- 5. POPUPS --- */
         .popup {
             position: fixed;
             top: 50%; left: 50%;
@@ -146,31 +140,14 @@
             max-width: 280px;
             z-index: 4000;
             text-align: center;
-            /* Bounce animation */
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
-
         .popup.active { transform: translate(-50%, -50%) scale(1); }
-
-        .popup h3 { margin-top: 0; color: #3d3d1a; }
-        .popup button { 
-            margin-top: 15px; 
-            background: #bab86c; 
-            border: none; 
-            padding: 5px 15px; 
-            border-radius: 5px; 
-            cursor: pointer;
-        }
+        .popup button { margin-top: 15px; background: #bab86c; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer; }
 
         /* --- 6. MAIN CARD --- */
-        #main-container {
-            width: 90%;
-            max-width: 450px;
-            display: none;
-            opacity: 0;
-        }
-
+        #main-container { width: 90%; max-width: 450px; display: none; opacity: 0; }
         .card {
             background-color: #bab86c;
             padding: 40px 20px;
@@ -179,7 +156,6 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             position: relative;
         }
-
         .btn-container {
             display: flex;
             justify-content: center;
@@ -188,16 +164,7 @@
             margin-top: 30px;
             min-height: 120px;
         }
-
-        button.main-action {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-        }
-
+        button.main-action { padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold; }
         #yes-btn { background-color: #ff4d6d; color: white; transition: transform 0.2s ease; z-index: 5;}
         #no-btn { background-color: #7a7a7a; color: white; transition: all 0.3s ease-out; z-index: 10;}
 
@@ -209,7 +176,13 @@
 
     <audio id="main-song" loop><source src="co2.mp3" type="audio/mpeg"></audio>
 
-    <div id="music-record"></div>
+    <div id="player-container">
+        <div class="vinyl-record"></div>
+        <div class="now-playing-box">
+            <span class="now-playing-text">♫ Now Playing: co2.mp3 - A Valentine's Surprise ♫</span>
+        </div>
+    </div>
+
     <div class="top-nav" id="top-nav" style="display: none;">
         <button class="nav-btn" onclick="openPopup('why-popup')">Why Me? ✨</button>
         <button class="nav-btn" onclick="openPopup('tc-popup')">T&C 📜</button>
@@ -231,7 +204,7 @@
         <div class="envelope" id="envelope-icon" onclick="openEnvelope()">
             <div class="seal">D</div> 
         </div>
-        <h2 style="color: #bab86c; font-style: italic;">A handwritten note for you...</h2>
+        <h2 style="color: #bab86c; font-style: italic; margin-top: 20px;">A handwritten note for you...</h2>
     </div>
 
     <div id="main-container">
@@ -256,7 +229,7 @@
                 document.getElementById('envelope-wrapper').style.display = 'none';
                 document.body.style.backgroundColor = 'olive';
                 document.getElementById('main-container').style.display = 'block';
-                document.getElementById('music-record').style.display = 'block';
+                document.getElementById('player-container').style.display = 'flex';
                 document.getElementById('top-nav').style.display = 'flex';
                 setTimeout(() => {
                     document.getElementById('main-container').style.opacity = '1';
@@ -280,7 +253,6 @@
 
             const distance = Math.sqrt(Math.pow(mouseX - btnCenterX, 2) + Math.pow(mouseY - btnCenterY, 2));
 
-            // Chase logic for mouse users
             if (distance < 100) {
                 const maxX = window.innerWidth - btnRect.width;
                 const maxY = window.innerHeight - btnRect.height;
@@ -292,7 +264,7 @@
                 noBtn.style.top = newY + 'px';
 
                 if (yesScale < 5) {
-                    yesScale += 0.2;
+                    yesScale += 0.25;
                     yesBtn.style.transform = `scale(${yesScale})`;
                 }
             }
