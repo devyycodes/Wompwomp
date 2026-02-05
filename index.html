@@ -70,11 +70,11 @@
             font-size: 1.8rem;
         }
 
-        /* --- 3. UI ELEMENTS --- */
+        /* --- 3. RESPONSIVE NAVIGATION --- */
         .top-nav {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 15px;
+            right: 15px;
             display: flex;
             gap: 10px;
             z-index: 3000;
@@ -84,26 +84,40 @@
             background: #bab86c;
             color: #3d3d1a;
             border: none;
-            padding: 8px 15px;
+            padding: 6px 12px;
             border-radius: 20px;
             font-weight: bold;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.75rem; /* Small but visible */
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            white-space: nowrap;
         }
 
-        /* Spinning Record */
+        /* Adjust for very small screens */
+        @media (max-width: 400px) {
+            .top-nav {
+                top: 10px;
+                right: 10px;
+                gap: 5px;
+            }
+            .nav-btn {
+                padding: 5px 8px;
+                font-size: 0.65rem;
+            }
+        }
+
+        /* --- 4. RECORD PLAYER --- */
         #music-record {
             position: fixed;
             bottom: 20px;
             left: 20px;
-            width: 60px;
-            height: 60px;
+            width: 55px;
+            height: 55px;
             background: radial-gradient(circle, #333 20%, #111 21%, #333 25%, #111 26%, #333 30%, #111 31%);
             border: 2px solid #bab86c;
             border-radius: 50%;
-            display: none; /* Shown after envelope opens */
-            animation: spin 3s linear infinite;
+            display: none; 
+            animation: spin 4s linear infinite;
             z-index: 3000;
         }
 
@@ -112,32 +126,44 @@
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 12px; height: 12px;
+            width: 10px; height: 10px;
             background: #bab86c;
             border-radius: 50%;
         }
 
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* --- 4. POPUPS --- */
+        /* --- 5. POPUP ANIMATIONS --- */
         .popup {
             position: fixed;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%) scale(0);
             background: #fdfae6;
-            padding: 30px;
+            padding: 25px;
             border-radius: 15px;
             border: 3px solid #bab86c;
-            width: 80%;
-            max-width: 300px;
+            width: 85%;
+            max-width: 280px;
             z-index: 4000;
             text-align: center;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            /* Bounce animation */
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
 
         .popup.active { transform: translate(-50%, -50%) scale(1); }
 
-        /* --- 5. MAIN CARD --- */
+        .popup h3 { margin-top: 0; color: #3d3d1a; }
+        .popup button { 
+            margin-top: 15px; 
+            background: #bab86c; 
+            border: none; 
+            padding: 5px 15px; 
+            border-radius: 5px; 
+            cursor: pointer;
+        }
+
+        /* --- 6. MAIN CARD --- */
         #main-container {
             width: 90%;
             max-width: 450px;
@@ -147,7 +173,7 @@
 
         .card {
             background-color: #bab86c;
-            padding: 50px 20px;
+            padding: 40px 20px;
             border-radius: 20px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
@@ -160,7 +186,7 @@
             align-items: center;
             gap: 20px;
             margin-top: 30px;
-            min-height: 100px;
+            min-height: 120px;
         }
 
         button.main-action {
@@ -172,8 +198,8 @@
             font-weight: bold;
         }
 
-        #yes-btn { background-color: #ff4d6d; color: white; transition: transform 0.2s ease; }
-        #no-btn { background-color: #7a7a7a; color: white; transition: all 0.3s ease-out; }
+        #yes-btn { background-color: #ff4d6d; color: white; transition: transform 0.2s ease; z-index: 5;}
+        #no-btn { background-color: #7a7a7a; color: white; transition: all 0.3s ease-out; z-index: 10;}
 
         .heart { position: absolute; color: #ff4d6d; animation: floatUp 3s linear forwards; z-index: 100; }
         @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-100vh); opacity: 0; } }
@@ -191,13 +217,13 @@
 
     <div id="why-popup" class="popup">
         <h3>Why Date Me?</h3>
-        <p>I give great gifts, I'm a good listener, and I'll always share my fries.</p>
+        <p>I'm a great listener, I have excellent taste in music, and I'll always be your biggest fan.</p>
         <button onclick="closePopup('why-popup')">Close</button>
     </div>
 
     <div id="tc-popup" class="popup">
         <h3>T&C</h3>
-        <p>1. Must provide infinite cuddles.<br>2. Subject to availability (I'm always free for you).</p>
+        <p>1. Must love movie nights.<br>2. Unlimited snacks provided.<br>3. Hand-holding is mandatory.</p>
         <button onclick="closePopup('tc-popup')">Agree</button>
     </div>
 
@@ -239,11 +265,10 @@
             }, 1400);
         }
 
-        // Popup Logic
         function openPopup(id) { document.getElementById(id).classList.add('active'); }
         function closePopup(id) { document.getElementById(id).classList.remove('active'); }
 
-        // Gliding logic
+        // Interaction Logic
         document.addEventListener('mousemove', (e) => {
             if (document.getElementById('main-container').style.display !== 'block') return;
 
@@ -255,6 +280,7 @@
 
             const distance = Math.sqrt(Math.pow(mouseX - btnCenterX, 2) + Math.pow(mouseY - btnCenterY, 2));
 
+            // Chase logic for mouse users
             if (distance < 100) {
                 const maxX = window.innerWidth - btnRect.width;
                 const maxY = window.innerHeight - btnRect.height;
@@ -266,7 +292,7 @@
                 noBtn.style.top = newY + 'px';
 
                 if (yesScale < 5) {
-                    yesScale += 0.15;
+                    yesScale += 0.2;
                     yesBtn.style.transform = `scale(${yesScale})`;
                 }
             }
