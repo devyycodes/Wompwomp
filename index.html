@@ -8,17 +8,15 @@
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Plus+Jakarta+Sans:wght@400;600&display=swap');
 
         :root {
-            /* Classy Designer Palette */
-            --forest-deep: #1a241b;      /* Sophisticated, not depressing */
-            --sage-glow: #a7bc95;       /* Warm, high-end green */
-            --sage-muted: #809671;      /* For depth */
-            --champagne: #f9f7f0;       /* Off-white for elegance */
-            --gold-leaf: #d4af37;       /* Accent */
-            --accent-rose: #e63946;     /* Romantic pop */
+            --forest-deep: #1a241b;
+            --sage-glow: #a7bc95;
+            --sage-muted: #809671;
+            --champagne: #f9f7f0;
+            --gold-leaf: #d4af37;
+            --accent-rose: #e63946;
         }
 
         * { box-sizing: border-box; }
-
         body {
             background-color: var(--forest-deep);
             margin: 0;
@@ -26,19 +24,20 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
+            overflow: hidden;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            transition: background-color 1s ease;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="%23a7bc95"><path d="M7 2l12 11.2-5.8 0.5 3.3 7.3-2.2 1-3.2-7.4L7 19V2z"/></svg>'), auto;
             background-image: radial-gradient(circle at center, #253326 0%, #1a241b 100%);
         }
 
-        /* --- ENVELOPE DESIGN --- */
+        canvas#cursor-canvas {
+            position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;
+        }
+
+        /* --- MAGICAL ENVELOPE --- */
         #envelope-wrapper { 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            z-index: 2000; 
+            display: flex; flex-direction: column; align-items: center; 
+            z-index: 2000; animation: float 4s ease-in-out infinite;
         }
 
         .envelope {
@@ -47,12 +46,9 @@
             height: 200px;
             background: var(--sage-glow);
             border-radius: 0 0 12px 12px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6);
+            box-shadow: 0 0 30px rgba(167, 188, 149, 0.2), 0 25px 50px rgba(0,0,0,0.5);
             cursor: pointer;
-            transition: transform 0.3s ease;
         }
-
-        .envelope:hover { transform: translateY(-5px); }
 
         .flap {
             position: absolute;
@@ -61,152 +57,108 @@
             border-right: min(160px, 42.5vw) solid transparent;
             border-top: 130px solid var(--sage-muted);
             transform-origin: top;
-            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 3;
-            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
         }
 
+        /* --- STYLIZED CRACKING SEAL --- */
         .seal {
             position: absolute;
             top: 100px; left: 50%; transform: translateX(-50%);
-            width: 70px; height: 70px; 
-            background: var(--forest-deep);
+            width: 75px; height: 75px; 
+            background: #2d382e;
             border: 2px solid var(--gold-leaf);
             border-radius: 50%; z-index: 4; 
             display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
         .seal::after { 
             content: 'D'; 
             font-family: 'Playfair Display', serif; 
-            font-size: 2.2rem; 
-            color: var(--gold-leaf); 
+            font-size: 2.5rem; font-style: italic;
+            color: var(--gold-leaf);
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
         }
 
-        .envelope.open .seal { animation: crack 0.6s forwards; opacity: 0; }
+        .envelope.open .seal { animation: crackSeal 0.8s forwards; }
         .envelope.open .flap { transform: rotateX(180deg); z-index: 1; }
 
-        @keyframes crack { 100% { transform: translateX(-50%) scale(0.5); opacity: 0; } }
-
-        /* --- DYNAMIC NAVIGATION (SIDEBAR STYLE) --- */
-        .nav-container { 
-            position: fixed; top: 20px; right: 20px; 
-            display: none; flex-direction: column; gap: 15px; z-index: 3000; 
+        @keyframes crackSeal {
+            0% { transform: translateX(-50%) scale(1); clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%); }
+            30% { transform: translateX(-50%) scale(1.1); }
+            100% { 
+                transform: translateX(-50%) scale(0.8) translateY(40px);
+                opacity: 0;
+                clip-path: polygon(0% 0%, 45% 0%, 35% 50%, 45% 100%, 0% 100%, 100% 100%, 65% 50%, 100% 0%); /* Jagged crack */
+            }
         }
 
-        .nav-item { position: relative; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
 
+        /* --- UI ELEMENTS --- */
+        .nav-container { position: fixed; top: 20px; right: 20px; display: none; flex-direction: column; gap: 12px; z-index: 3000; }
         .nav-btn {
-            background: rgba(167, 188, 149, 0.2);
-            color: var(--champagne);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 10px 20px; border-radius: 30px; 
-            font-weight: 600; cursor: pointer;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05); color: var(--champagne);
+            border: 1px solid rgba(255,255,255,0.1); padding: 10px 22px; border-radius: 30px; 
+            font-weight: 600; cursor: pointer; backdrop-filter: blur(10px); transition: 0.3s;
         }
-
         .nav-btn:hover { background: var(--sage-glow); color: var(--forest-deep); }
 
         .dialogue-box {
             position: absolute; top: 0; right: calc(100% + 15px);
             width: 0; height: 0; background: var(--champagne);
             border-radius: 16px; overflow: hidden; opacity: 0;
-            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4); border-left: 6px solid var(--gold-leaf);
         }
+        .dialogue-box.active { width: 280px; height: auto; padding: 25px; opacity: 1; }
 
-        .dialogue-box.active {
-            width: 280px; height: auto; padding: 25px; opacity: 1; pointer-events: auto;
-        }
-
-        /* --- THE MAIN CARD --- */
-        #main-container { width: 90%; max-width: 450px; display: none; opacity: 0; z-index: 10; }
         .card { 
-            background: var(--champagne); 
-            padding: 50px 30px; 
-            border-radius: 30px; 
-            text-align: center; 
-            box-shadow: 0 40px 100px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.8);
+            background: var(--champagne); padding: 50px 30px; border-radius: 30px; 
+            text-align: center; box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+            display: none; opacity: 0; transition: 0.8s;
         }
+        .card h1 { font-family: 'Playfair Display', serif; color: var(--forest-deep); font-size: 2.2rem; }
 
-        .card h1 { 
-            font-family: 'Playfair Display', serif; 
-            color: var(--forest-deep); 
-            font-size: clamp(1.8rem, 5vw, 2.5rem); 
-            margin-bottom: 30px; 
-        }
-
-        .btn-container { 
-            display: flex; flex-direction: column; align-items: center; gap: 15px; 
-            margin-top: 20px; width: 100%;
-        }
-
-        button.main-action { 
-            width: 200px; padding: 16px; border: none; border-radius: 50px; 
-            font-weight: 600; font-size: 1rem; cursor: pointer; transition: 0.3s; 
-        }
-
-        #yes-btn { background: var(--forest-deep); color: var(--champagne); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        button.main-action { width: 180px; padding: 16px; border: none; border-radius: 50px; font-weight: 600; cursor: pointer; transition: 0.3s; margin: 10px; }
+        #yes-btn { background: var(--forest-deep); color: var(--champagne); }
         #no-btn { background: transparent; color: #888; border: 1px solid #ddd; }
 
-        /* Success View */
         .pdf-link {
-            position: fixed; bottom: 30px; left: 30px;
-            background: var(--champagne); color: var(--forest-deep);
-            padding: 12px 24px; border-radius: 12px; text-decoration: none;
-            font-weight: 600; display: flex; align-items: center; gap: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            animation: slideUp 0.6s ease;
+            position: fixed; bottom: 30px; left: 30px; background: var(--champagne);
+            color: var(--forest-deep); padding: 12px 24px; border-radius: 12px;
+            text-decoration: none; font-weight: 600; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            display: flex; align-items: center; gap: 8px; animation: slideUp 0.5s ease forwards;
         }
 
-        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        /* --- PLAYER --- */
-        #player-container {
-            position: fixed; bottom: 30px; right: 30px; 
-            display: none; align-items: center; gap: 12px;
-            background: rgba(255, 255, 255, 0.1); padding: 10px; border-radius: 50px; 
-            backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .vinyl-record {
-            width: 40px; height: 40px; border-radius: 50%; cursor: pointer; animation: spin 4s linear infinite;
-            background: radial-gradient(circle, var(--sage-glow) 15%, #111 16%);
-            border: 2px solid rgba(255,255,255,0.2);
-        }
-
+        #player-container { position: fixed; bottom: 30px; right: 30px; display: none; }
+        .vinyl-record { width: 45px; height: 45px; border-radius: 50%; cursor: pointer; animation: spin 4s linear infinite; background: radial-gradient(circle, var(--gold-leaf) 15%, #111 16%); border: 2px solid rgba(255,255,255,0.2); }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        .heart { position: absolute; color: var(--accent-rose); animation: floatUp 3s ease-out forwards; pointer-events: none; }
-        @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-120vh); opacity: 0; } }
-
-        @media (max-width: 600px) {
-            .nav-container { top: auto; bottom: 100px; right: 20px; }
-            .dialogue-box.active { width: 220px; bottom: 50px; top: auto; }
-        }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
 <body>
 
+    <canvas id="cursor-canvas"></canvas>
     <audio id="main-song" loop><source src="co2.mp3" type="audio/mpeg"></audio>
 
     <div class="nav-container" id="top-nav">
-        <div class="nav-item">
+        <div style="position:relative">
             <button class="nav-btn" onclick="toggleDialogue('why-box')">Why You?</button>
             <div id="why-box" class="dialogue-box">
-                <h3 style="font-family: 'Playfair Display', serif; color: var(--forest-deep);">Because...</h3>
-                <p style="color: #555; line-height: 1.6;">You're the peace in my chaos. Every conversation with you is my favorite part of the day.</p>
+                <h3 style="font-family:'Playfair Display'; margin:0 0 10px 0;">Because...</h3>
+                <p style="font-size:0.9rem; line-height:1.5; color:#444;">You are the magic in every ordinary moment. I'm so lucky to have you.</p>
             </div>
         </div>
-        <div class="nav-item">
+        <div style="position:relative">
             <button class="nav-btn" onclick="toggleDialogue('tc-box')">T&C</button>
             <div id="tc-box" class="dialogue-box">
-                <h3 style="font-family: 'Playfair Display', serif; color: var(--forest-deep);">The Contract</h3>
-                <p style="color: #555; line-height: 1.6;">By clicking yes, you agree to 100% of my attention, limited only by your own patience.</p>
+                <h3 style="font-family:'Playfair Display'; margin:0 0 10px 0;">The Pact</h3>
+                <p style="font-size:0.9rem; line-height:1.5; color:#444;">1. Always choose the movie together.<br>2. Unlimited coffee access.<br>3. Mutual adoration required.</p>
             </div>
         </div>
     </div>
@@ -216,13 +168,13 @@
             <div class="flap"></div>
             <div class="seal"></div>
         </div>
-        <h2 style="color: var(--sage-glow); font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; margin-top: 30px; opacity: 0.8;">Open your letter</h2>
+        <h2 style="color: var(--sage-glow); font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; margin-top: 40px; opacity: 0.6;">A Magical Delivery</h2>
     </div>
 
-    <div id="main-container">
+    <div id="main-container" style="display:none; width:90%; max-width:450px;">
         <div class="card" id="main-card">
             <h1>Will you be my valentine?</h1>
-            <div class="btn-container">
+            <div style="display:flex; flex-direction:column; align-items:center; margin-top:20px;">
                 <button id="yes-btn" class="main-action">Yes, I will</button>
                 <button id="no-btn" class="main-action">No</button>
             </div>
@@ -234,82 +186,96 @@
     </div>
 
     <script>
-        const yesBtn = document.getElementById('yes-btn');
-        const noBtn = document.getElementById('no-btn');
-        const song = document.getElementById('main-song');
-        const record = document.getElementById('vinyl-record');
+        // --- TINKER BELL CURSOR ---
+        const canvas = document.getElementById('cursor-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+        window.addEventListener('resize', resize); resize();
 
-        function handleOpen() {
-            const env = document.querySelector('.envelope');
-            if (env.classList.contains('open')) return;
-            env.classList.add('open');
-            song.play().catch(() => {});
-
-            setTimeout(() => {
-                document.getElementById('envelope-wrapper').style.display = 'none';
-                const main = document.getElementById('main-container');
-                main.style.display = 'block';
-                document.getElementById('player-container').style.display = 'flex';
-                document.getElementById('top-nav').style.display = 'flex';
-                setTimeout(() => { main.style.opacity = '1'; }, 50);
-            }, 1000);
+        class Dust {
+            constructor(x, y) {
+                this.x = x; this.y = y;
+                this.size = Math.random() * 2.5 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 1.5;
+                this.speedY = (Math.random() - 0.5) * 1.5;
+                this.color = Math.random() > 0.3 ? '#d4af37' : '#ffffff';
+                this.opacity = 1;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.opacity;
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+            }
+            update() {
+                this.x += this.speedX; this.y += this.speedY;
+                this.opacity -= 0.015; if (this.size > 0.1) this.size -= 0.02;
+            }
         }
 
-        function toggleMusic() {
-            if (song.paused) { song.play(); record.style.animationPlayState = 'running'; }
-            else { song.pause(); record.style.animationPlayState = 'paused'; }
+        const animate = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, i) => {
+                p.update(); p.draw();
+                if (p.opacity <= 0) particles.splice(i, 1);
+            });
+            requestAnimationFrame(animate);
+        };
+        animate();
+        window.addEventListener('mousemove', (e) => {
+            for(let i=0; i<4; i++) particles.push(new Dust(e.clientX, e.clientY));
+        });
+
+        // --- LOGIC ---
+        const song = document.getElementById('main-song');
+        function handleOpen() {
+            document.querySelector('.envelope').classList.add('open');
+            song.play().catch(() => {});
+            setTimeout(() => {
+                document.getElementById('envelope-wrapper').style.display = 'none';
+                document.getElementById('main-container').style.display = 'block';
+                const card = document.getElementById('main-card');
+                card.style.display = 'block';
+                document.getElementById('player-container').style.display = 'flex';
+                document.getElementById('top-nav').style.display = 'flex';
+                setTimeout(() => card.style.opacity = '1', 50);
+            }, 1200);
         }
 
         function toggleDialogue(id) {
             const box = document.getElementById(id);
-            const wasActive = box.classList.contains('active');
+            const active = box.classList.contains('active');
             document.querySelectorAll('.dialogue-box').forEach(b => b.classList.remove('active'));
-            if (!wasActive) box.classList.add('active');
+            if (!active) box.classList.add('active');
         }
+
+        const noBtn = document.getElementById('no-btn');
+        const yesBtn = document.getElementById('yes-btn');
+        let scale = 1;
 
         const moveNo = () => {
             noBtn.style.position = 'fixed';
-            noBtn.style.left = Math.random() * (window.innerWidth - 200) + 'px';
+            noBtn.style.left = Math.random() * (window.innerWidth - 150) + 'px';
             noBtn.style.top = Math.random() * (window.innerHeight - 50) + 'px';
-            
-            let currentScale = parseFloat(yesBtn.style.transform.replace('scale(', '').replace(')', '')) || 1;
-            if (currentScale < 3.5) yesBtn.style.transform = `scale(${currentScale + 0.25})`;
+            if (scale < 4) { scale += 0.3; yesBtn.style.transform = `scale(${scale})`; }
         };
         noBtn.addEventListener('mouseover', moveNo);
-        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveNo(); });
 
         yesBtn.addEventListener('click', () => {
             document.getElementById('main-card').innerHTML = `
                 <h1 style="margin:0;">I knew you'd say yes! 💖</h1>
-                <p style="color: #666; margin-top:15px;">Best Valentine's ever.</p>
-                <a href="coupons.pdf" download class="pdf-link">
-                    <span>🎁 Your Coupons</span>
-                </a>
+                <p style="color:#666; margin-top:15px;">You've made my year.</p>
+                <a href="coupons.pdf" download class="pdf-link"><span>🎁 Claim Your Gift</span></a>
             `;
-            rainHearts();
+            setInterval(() => {
+                particles.push(new Dust(Math.random() * window.innerWidth, window.innerHeight));
+            }, 50);
         });
 
-        function rainHearts() {
-            for (let i = 0; i < 40; i++) {
-                setTimeout(() => {
-                    const h = document.createElement('div');
-                    h.classList.add('heart');
-                    h.innerHTML = '❤';
-                    h.style.left = Math.random() * 100 + 'vw';
-                    h.style.fontSize = (Math.random() * 20 + 20) + 'px';
-                    h.style.bottom = '-50px';
-                    document.body.appendChild(h);
-                    setTimeout(() => h.remove(), 3000);
-                }, i * 100);
-            }
+        function toggleMusic() {
+            if (song.paused) { song.play(); document.getElementById('vinyl-record').style.animationPlayState = 'running'; }
+            else { song.pause(); document.getElementById('vinyl-record').style.animationPlayState = 'paused'; }
         }
-
-        // Close dialogue when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.nav-item')) {
-                document.querySelectorAll('.dialogue-box').forEach(b => b.classList.remove('active'));
-            }
-        });
     </script>
 </body>
 </html>
