@@ -52,13 +52,21 @@
             border: 1px solid rgba(186, 184, 108, 0.3);
         }
         .vinyl-record {
-            width: 40px; height: 40px;
+            width: 45px; height: 45px;
             background: radial-gradient(circle, #bab86c 12%, transparent 12.5%),
                         radial-gradient(circle, #222 25%, #111 25.5%, #111 30%, #222 30.5%),
                         repeating-radial-gradient(circle, #111, #111 2px, #222 3px);
             border-radius: 50%;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
             animation: spin 4s linear infinite;
         }
+        /* Pause State */
+        .vinyl-record.paused {
+            animation-play-state: paused;
+            opacity: 0.6;
+        }
+        
         .now-playing-box { overflow: hidden; white-space: nowrap; width: 100px; }
         .now-playing-text { display: inline-block; color: #bab86c; font-size: 0.7rem; animation: marquee 10s linear infinite; }
 
@@ -144,9 +152,9 @@
     <audio id="main-song" loop><source src="co2.mp3" type="audio/mpeg"></audio>
 
     <div id="player-container">
-        <div class="vinyl-record"></div>
+        <div class="vinyl-record" id="vinyl-record" onclick="toggleMusic()"></div>
         <div class="now-playing-box">
-            <span class="now-playing-text">♫ Now Playing: co2.mp3 - A Valentine's Surprise ♫</span>
+            <span class="now-playing-text" id="status-text">♫ Now Playing: co2.mp3 - A Valentine's Surprise ♫</span>
         </div>
     </div>
 
@@ -188,6 +196,7 @@
         const yesBtn = document.getElementById('yes-btn');
         const noBtn = document.getElementById('no-btn');
         const song = document.getElementById('main-song');
+        const record = document.getElementById('vinyl-record');
         let yesScale = 1;
 
         function openEnvelope() {
@@ -205,10 +214,20 @@
             }, 1000);
         }
 
+        // --- MUSIC TOGGLE LOGIC ---
+        function toggleMusic() {
+            if (song.paused) {
+                song.play();
+                record.classList.remove('paused');
+            } else {
+                song.pause();
+                record.classList.add('paused');
+            }
+        }
+
         function openPopup(id) { document.getElementById(id).classList.add('active'); }
         function closePopup(id) { document.getElementById(id).classList.remove('active'); }
 
-        // --- MOUSE CHASE LOGIC ---
         document.addEventListener('mousemove', (e) => {
             if (document.getElementById('main-container').style.display !== 'block') return;
 
@@ -222,7 +241,6 @@
                 const padding = 30;
                 const maxX = window.innerWidth - btnRect.width - padding;
                 const maxY = window.innerHeight - btnRect.height - padding;
-
                 const newX = Math.max(padding, Math.random() * maxX);
                 const newY = Math.max(padding, Math.random() * maxY);
 
@@ -237,9 +255,6 @@
             }
         });
 
-        // --- DIFFERENTIATED RESPONSES ---
-        
-        // Success Logic for YES
         yesBtn.addEventListener('click', () => {
             document.getElementById('main-card').innerHTML = `
                 <div style="font-size:3rem">💖</div>
@@ -250,7 +265,6 @@
             rainHearts();
         });
 
-        // Response Logic for NO (Mobile Tap or accidental catch)
         noBtn.addEventListener('click', () => {
             document.getElementById('main-card').innerHTML = `
                 <div style="font-size:3rem">💝</div>
