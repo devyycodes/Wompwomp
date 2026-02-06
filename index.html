@@ -87,17 +87,28 @@
         }
         .dialogue-box.active { width: 300px; height: auto; padding: 25px; opacity: 1; pointer-events: auto; }
 
-        /* --- CARD & BUTTONS --- */
-        #main-container { width: 100%; display: none; justify-content: center; z-index: 10; }
-        .card { 
-            background: var(--champagne); padding: 50px 30px; border-radius: 30px; 
-            text-align: center; box-shadow: 0 40px 100px rgba(0,0,0,0.5);
-            opacity: 0; transition: 0.8s; max-width: 450px; width: 90%;
-        }
+/* --- CARD & BUTTONS --- */
+#main-container { width: 100%; display: none; justify-content: center; z-index: 10; }
+.card { 
+    background: var(--champagne); padding: 50px 30px; border-radius: 30px; 
+    text-align: center; box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+    opacity: 0; transition: 0.8s; max-width: 450px; width: 90%;
+}
 
-        button.main-action { width: 180px; padding: 16px; border: none; border-radius: 50px; font-weight: 600; cursor: pointer; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s; margin: 10px; }
-        #yes-btn { background: var(--forest-deep); color: var(--champagne); z-index: 1001; }
-        #no-btn { background: transparent; color: #888; border: 1px solid #ddd; z-index: 1000; }
+button.main-action { width: 180px; padding: 16px; border: none; border-radius: 50px; font-weight: 600; cursor: pointer; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s; margin: 10px; }
+
+#yes-btn { background: var(--forest-deep); color: var(--champagne); z-index: 1001; }
+
+#no-btn { 
+    background: transparent; 
+    color: #888; 
+    border: 1px solid #ddd; 
+    z-index: 1000;
+    /* This makes it "run" instead of teleport */
+    transition: left 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+
 
         /* --- MUSIC PLAYER --- */
         #player-container { position: fixed; bottom: 30px; left: 30px; display: none; align-items: center; z-index: 3000; }
@@ -298,36 +309,29 @@
         const loveMessages = ["Are you sure?", "Think again!", "Give it a chance!", "I'm persistent!", "Just click Yes!"];
 
         const teleportNo = () => {
-            const maxX = window.innerWidth - noBtn.offsetWidth;
-            const maxY = window.innerHeight - noBtn.offsetHeight;
-            noBtn.style.position = 'fixed';
-            noBtn.style.left = Math.floor(Math.random() * maxX) + 'px';
-            noBtn.style.top = Math.floor(Math.random() * maxY) + 'px';
-            
-            if (scale < 5) { 
-                scale += 0.4; 
-                yesBtn.style.transform = `scale(${scale})`;
-                const msgIndex = Math.min(Math.floor(scale - 1), loveMessages.length - 1);
-                yesBtn.innerText = loveMessages[msgIndex];
-            }
-        };
+    // Calculate a random spot that isn't right where the mouse is
+    const padding = 100; // Keeps it away from edges
+    const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+    const maxY = window.innerHeight - noBtn.offsetHeight - padding;
 
-        noBtn.addEventListener('mouseover', teleportNo);
-        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); teleportNo(); });
+    noBtn.style.position = 'fixed';
+    
+    // Generate new coordinates
+    const newX = Math.random() * maxX + (padding / 2);
+    const newY = Math.random() * maxY + (padding / 2);
 
-        yesBtn.addEventListener('click', () => {
-            isSuccess = true;
-            for(let i=0; i<40; i++) fireflies.push(new Firefly());
-            const card = document.getElementById('main-card');
-            card.style.opacity = '0';
-            setTimeout(() => {
-                card.innerHTML = `<h1 style="font-family:'Playfair Display'; color:var(--forest-deep); margin:0;">YAAAAYYYYY.</h1><p style="color:var(--sage-muted); margin-top:15px; font-weight:600;">I knew you'd say yes ;).</p>`;
-                card.style.opacity = '1';
-                document.getElementById('pdf-link').style.display = 'flex';
-            }, 500);
-            document.body.style.transition = "background-color 2s ease";
-            document.body.style.backgroundColor = "#141c15";
-        });
+    noBtn.style.left = `${newX}px`;
+    noBtn.style.top = `${newY}px`;
+
+    // Love Meter Scaling Logic
+    if (scale < 5) { 
+        scale += 0.4; 
+        yesBtn.style.transform = `scale(${scale})`;
+        const msgIndex = Math.min(Math.floor(scale - 1), loveMessages.length - 1);
+        yesBtn.innerText = loveMessages[msgIndex];
+    }
+};
+
 
         function toggleMusic() {
             const record = document.getElementById('vinyl-record');
