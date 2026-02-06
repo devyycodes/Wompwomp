@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Valentine Surprise</title>
+    <title>A little something for a special someone</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@0,700;1,700&family=Plus+Jakarta+Sans:wght@400;600&display=swap');
 
@@ -50,25 +50,27 @@
             transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); z-index: 3;
         }
 
+        /* --- WAX SEAL CRACKING --- */
         .seal {
             position: absolute; top: 100px; left: 50%; transform: translateX(-50%);
-            width: 75px; height: 75px; background: #2d382e; border: 2px solid var(--gold-leaf);
-            border-radius: 50%; z-index: 4; display: flex; justify-content: center; align-items: center;
-            transition: 0.5s;
+            width: 75px; height: 75px; z-index: 4; display: flex; justify-content: center; align-items: center;
         }
 
-        .seal::after { 
+        .seal-part {
+            position: absolute; width: 100%; height: 100%;
+            background: #2d382e; border: 2px solid var(--gold-leaf);
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .seal-part::after { 
             content: 'D'; font-family: 'Dancing Script', cursive; 
-            font-size: 2.8rem; color: var(--gold-leaf); transform: rotate(-5deg);
+            font-size: 2.8rem; color: var(--gold-leaf);
         }
 
-        .envelope.open .seal { animation: crackSeal 0.8s forwards; }
+        .envelope.open .seal-left { transform: translateX(-60%) rotate(-15deg); opacity: 0; clip-path: polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%); }
+        .envelope.open .seal-right { transform: translateX(-40%) rotate(15deg); opacity: 0; clip-path: polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%); }
         .envelope.open .flap { transform: rotateX(180deg); z-index: 1; }
-
-        @keyframes crackSeal {
-            0% { transform: translateX(-50%) scale(1); opacity: 1; }
-            100% { transform: translateX(-50%) scale(0.8) translateY(40px); opacity: 0; }
-        }
 
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
@@ -106,7 +108,6 @@
         .now-playing-banner { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(12px); height: 45px; padding-left: 45px; padding-right: 25px; margin-left: -35px; border-radius: 0 30px 30px 0; display: flex; flex-direction: column; justify-content: center; width: 210px; border: 1px solid rgba(255,255,255,0.1); }
         .track-name { font-size: 0.8rem; color: var(--champagne); font-weight: 600; white-space: nowrap; display: inline-block; animation: marquee 10s linear infinite; }
 
-        /* --- PDF LINK WITH SHIMMER --- */
         .pdf-link { 
             position: fixed; bottom: 30px; right: 30px; 
             background: linear-gradient(90deg, var(--champagne), #eaddca, var(--champagne));
@@ -136,8 +137,8 @@
                 <ul style="color: #444; font-size: 0.85rem; padding-left: 18px; margin-top: 12px; line-height: 1.4;">
                     <li>I make great coffee, so you’d wake up to amazing coffee most days.</li>
                     <li>Our filial generation could have nice hair, great features, and be great philosophers.</li>
-                    <li>You receive poems, gifts, and little trinkets dedicated to you.</li>
-                    <li>We play chess together even though I’m not good at it (yet).</li>
+                    <li>You'll receive poems, gifts, and little trinkets dedicated to you.</li>
+                    <li>We would play chess together even though I’m not good at it (yet).</li>
                     <li>I’m budget friendly and pocket friendly.</li>
                     <li>We could be Bonnie and Clyde.</li>
                 </ul>
@@ -148,9 +149,9 @@
             <div id="tc-box" class="dialogue-box">
                 <h3 style="font-family:'Playfair Display'; color:var(--forest-deep); margin:0;">The Contract</h3>
                 <ul style="color: #444; font-size: 0.85rem; padding-left: 18px; margin-top: 12px; line-height: 1.4;">
-                    <li><strong>Lifetime Subscription:</strong> Withdrawing may result in unprecedented emotional damage.</li>
+                    <li><strong>Lifetime Subscription:</strong> Withdrawing may result in emotional damage and adverse consequences</li>
                     <li>Reassurance is needed from time to time.</li>
-                    <li>Talk at least once every two days (even a small text). I get worried and it ruins my day.</li>
+                    <li>Talk to me at least once every two days (even a small text). It worries me when you dont text and it kind of ruins my day.</li>
                     <li>Hugs and kisses mandatory every time we meet.</li>
                 </ul>
             </div>
@@ -160,16 +161,19 @@
     <div id="envelope-wrapper">
         <div class="envelope" onclick="handleOpen()">
             <div class="flap"></div>
-            <div class="seal"></div>
+            <div class="seal">
+                <div class="seal-part seal-left"></div>
+                <div class="seal-part seal-right"></div>
+            </div>
         </div>
-        <h2 style="color: var(--sage-glow); font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; margin-top: 40px; opacity: 0.6;">A Special Delivery</h2>
+        <h2 style="color: var(--sage-glow); font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; margin-top: 40px; opacity: 0.6;">To, my favourite sinner</h2>
     </div>
 
     <div id="main-container">
         <div class="card" id="main-card">
-            <h1 style="font-family:'Playfair Display', serif; color:var(--forest-deep); font-size:2.2rem; margin:0 0 20px 0;">Will you be my valentine?</h1>
+            <h1 style="font-family:'Playfair Display', serif; color:var(--forest-deep); font-size:2.2rem; margin:0 0 20px 0;">Can I be your sin this valentine?</h1>
             <div style="display:flex; flex-direction:column; align-items:center;">
-                <button id="yes-btn" class="main-action">Yes, I will</button>
+                <button id="yes-btn" class="main-action">Yes!</button>
                 <button id="no-btn" class="main-action">No</button>
             </div>
         </div>
@@ -187,13 +191,15 @@
         </div>
     </div>
 
-    <a href="coupons.pdf" download id="pdf-link" class="pdf-link"><span>🎁 Claim Your Gift</span></a>
+    <a href="coupons.pdf" download id="pdf-link" class="pdf-link"><span>A little token for you🫶(we're just getting started ;)). Click here to redeem</span></a>
 
     <script>
-        // --- IMPROVED CURSOR DUST WITH FRICTION ---
         const canvas = document.getElementById('cursor-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
+        let fireflies = [];
+        let isSuccess = false;
+
         const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
         window.addEventListener('resize', resize); resize();
 
@@ -208,18 +214,36 @@
                 this.friction = 0.98; 
             }
             update() {
-                this.speedX *= this.friction;
-                this.speedY *= this.friction;
-                this.x += this.speedX;
-                this.y += this.speedY;
+                this.speedX *= this.friction; this.speedY *= this.friction;
+                this.x += this.speedX; this.y += this.speedY;
                 this.opacity -= 0.012;
             }
             draw() {
-                ctx.fillStyle = this.color;
-                ctx.globalAlpha = this.opacity;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.fillStyle = this.color; ctx.globalAlpha = this.opacity;
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+            }
+        }
+
+        class Firefly {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + 10;
+                this.s = Math.random() * 2;
+                this.ang = Math.random() * Math.PI * 2;
+                this.v = Math.random() * 0.5 + 0.2;
+            }
+            update() {
+                this.y -= this.v;
+                this.x += Math.sin(this.ang) * 0.5;
+                this.ang += 0.02;
+                if(this.y < -10) this.y = canvas.height + 10;
+            }
+            draw() {
+                ctx.globalAlpha = Math.abs(Math.sin(Date.now() * 0.002)) * 0.8;
+                ctx.shadowBlur = 10; ctx.shadowColor = "#d4af37";
+                ctx.fillStyle = "#d4af37";
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.s, 0, Math.PI * 2); ctx.fill();
+                ctx.shadowBlur = 0;
             }
         }
 
@@ -227,23 +251,24 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles = particles.filter(p => p.opacity > 0);
             particles.forEach(p => { p.update(); p.draw(); });
+            
+            if(isSuccess) {
+                fireflies.forEach(f => { f.update(); f.draw(); });
+            }
             requestAnimationFrame(animate);
         }
         animate();
+
         window.addEventListener('mousemove', (e) => { 
-            for(let i=0; i<4; i++) particles.push(new Dust(e.clientX, e.clientY)); 
+            for(let i=0; i<3; i++) particles.push(new Dust(e.clientX, e.clientY)); 
         });
 
-        // --- CORE LOGIC ---
         const song = document.getElementById('main-song');
-        
         function handleOpen() {
             const env = document.querySelector('.envelope');
             if(env.classList.contains('open')) return;
             env.classList.add('open');
-            
-            // Resilience: Play song immediately on click
-            song.play().catch(() => console.log("Music will start on next interaction."));
+            song.play().catch(() => {});
 
             setTimeout(() => {
                 document.getElementById('envelope-wrapper').style.opacity = '0';
@@ -265,11 +290,6 @@
             if (!wasActive) box.classList.add('active');
         }
 
-        document.addEventListener('click', () => {
-            document.querySelectorAll('.dialogue-box').forEach(b => b.classList.remove('active'));
-        });
-
-        // --- THE UNTOUCHABLE NO BUTTON ---
         const noBtn = document.getElementById('no-btn');
         const yesBtn = document.getElementById('yes-btn');
         let scale = 1;
@@ -280,36 +300,24 @@
             noBtn.style.position = 'fixed';
             noBtn.style.left = Math.floor(Math.random() * maxX) + 'px';
             noBtn.style.top = Math.floor(Math.random() * maxY) + 'px';
-            
-            if (scale < 4) { 
-                scale += 0.4; 
-                yesBtn.style.transform = `scale(${scale})`; 
-            }
+            if (scale < 4) { scale += 0.4; yesBtn.style.transform = `scale(${scale})`; }
         };
 
         noBtn.addEventListener('mouseover', teleportNo);
         noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); teleportNo(); });
 
         yesBtn.addEventListener('click', () => {
+            isSuccess = true;
+            for(let i=0; i<30; i++) fireflies.push(new Firefly());
             const card = document.getElementById('main-card');
             card.style.opacity = '0';
             setTimeout(() => {
-                card.innerHTML = `
-                    <h1 style="font-family:'Playfair Display'; color:var(--forest-deep); margin:0;">It's a date.</h1>
-                    <p style="color:var(--sage-muted); margin-top:15px; font-weight:600;">I'll see you then.</p>
-                `;
+                card.innerHTML = `<h1 style="font-family:'Playfair Display'; color:var(--forest-deep); margin:0;">It's a date.</h1><p style="color:var(--sage-muted); margin-top:15px; font-weight:600;">I'll see you then.</p>`;
                 card.style.opacity = '1';
                 document.getElementById('pdf-link').style.display = 'flex';
             }, 500);
-            
             document.body.style.transition = "background-color 2s ease";
             document.body.style.backgroundColor = "#141c15";
-            
-            // Celebration dust effect
-            const celebration = setInterval(() => { 
-                particles.push(new Dust(Math.random() * window.innerWidth, Math.random() * window.innerHeight)); 
-            }, 80);
-            setTimeout(() => clearInterval(celebration), 5000);
         });
 
         function toggleMusic() {
@@ -317,6 +325,10 @@
             if (song.paused) { song.play(); record.style.animationPlayState = 'running'; }
             else { song.pause(); record.style.animationPlayState = 'paused'; }
         }
+
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.dialogue-box').forEach(b => b.classList.remove('active'));
+        });
     </script>
 </body>
 </html>
