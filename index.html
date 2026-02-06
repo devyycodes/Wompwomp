@@ -294,13 +294,21 @@
         const yesBtn = document.getElementById('yes-btn');
         let scale = 1;
 
+        const loveMessages = ["Are you sure?", "Think again!", "Give it a chance!", "I'm persistent!", "Just click Yes!"];
+
         const teleportNo = () => {
             const maxX = window.innerWidth - noBtn.offsetWidth;
             const maxY = window.innerHeight - noBtn.offsetHeight;
             noBtn.style.position = 'fixed';
             noBtn.style.left = Math.floor(Math.random() * maxX) + 'px';
             noBtn.style.top = Math.floor(Math.random() * maxY) + 'px';
-            if (scale < 4) { scale += 0.4; yesBtn.style.transform = `scale(${scale})`; }
+            
+            if (scale < 5) { 
+                scale += 0.4; 
+                yesBtn.style.transform = `scale(${scale})`;
+                const msgIndex = Math.min(Math.floor(scale - 1), loveMessages.length - 1);
+                yesBtn.innerText = loveMessages[msgIndex];
+            }
         };
 
         noBtn.addEventListener('mouseover', teleportNo);
@@ -308,11 +316,11 @@
 
         yesBtn.addEventListener('click', () => {
             isSuccess = true;
-            for(let i=0; i<30; i++) fireflies.push(new Firefly());
+            for(let i=0; i<40; i++) fireflies.push(new Firefly());
             const card = document.getElementById('main-card');
             card.style.opacity = '0';
             setTimeout(() => {
-                card.innerHTML = `<h1 style="font-family:'Playfair Display'; color:var(--forest-deep); margin:0;">YAAAAAYYYYYYY</h1><p style="color:var(--sage-muted); margin-top:15px; font-weight:600;">I knew you'd say yes ;)</p>`;
+                card.innerHTML = `<h1 style="font-family:'Playfair Display'; color:var(--forest-deep); margin:0;">It's a date.</h1><p style="color:var(--sage-muted); margin-top:15px; font-weight:600;">I'll see you then.</p>`;
                 card.style.opacity = '1';
                 document.getElementById('pdf-link').style.display = 'flex';
             }, 500);
