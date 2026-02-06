@@ -50,7 +50,7 @@
             transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); z-index: 3;
         }
 
-        /* --- WAX SEAL CRACKING --- */
+        /* --- WAX SEAL --- */
         .seal {
             position: absolute; top: 100px; left: 50%; transform: translateX(-50%);
             width: 75px; height: 75px; z-index: 4; display: flex; justify-content: center; align-items: center;
@@ -87,28 +87,20 @@
         }
         .dialogue-box.active { width: 300px; height: auto; padding: 25px; opacity: 1; pointer-events: auto; }
 
-/* --- CARD & BUTTONS --- */
-#main-container { width: 100%; display: none; justify-content: center; z-index: 10; }
-.card { 
-    background: var(--champagne); padding: 50px 30px; border-radius: 30px; 
-    text-align: center; box-shadow: 0 40px 100px rgba(0,0,0,0.5);
-    opacity: 0; transition: 0.8s; max-width: 450px; width: 90%;
-}
+        /* --- CARD & BUTTONS --- */
+        #main-container { width: 100%; display: none; justify-content: center; z-index: 10; }
+        .card { 
+            background: var(--champagne); padding: 50px 30px; border-radius: 30px; 
+            text-align: center; box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+            opacity: 0; transition: 0.8s; max-width: 450px; width: 90%;
+        }
 
-button.main-action { width: 180px; padding: 16px; border: none; border-radius: 50px; font-weight: 600; cursor: pointer; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s; margin: 10px; }
-
-#yes-btn { background: var(--forest-deep); color: var(--champagne); z-index: 1001; }
-
-#no-btn { 
-    background: transparent; 
-    color: #888; 
-    border: 1px solid #ddd; 
-    z-index: 1000;
-    /* This makes it "run" instead of teleport */
-    transition: left 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-
+        button.main-action { width: 180px; padding: 16px; border: none; border-radius: 50px; font-weight: 600; cursor: pointer; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s; margin: 10px; }
+        #yes-btn { background: var(--forest-deep); color: var(--champagne); z-index: 1001; }
+        #no-btn { 
+            background: transparent; color: #888; border: 1px solid #ddd; z-index: 1000;
+            transition: left 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
 
         /* --- MUSIC PLAYER --- */
         #player-container { position: fixed; bottom: 30px; left: 30px; display: none; align-items: center; z-index: 3000; }
@@ -142,7 +134,7 @@ button.main-action { width: 180px; padding: 16px; border: none; border-radius: 5
 
     <div class="nav-container" id="top-nav">
         <div class="nav-item" style="position:relative;">
-            <button class="nav-btn" onclick="toggleDialogue(event, 'why-box')">Why Us??</button>
+            <button class="nav-btn" onclick="toggleDialogue(event, 'why-box')">Why us??</button>
             <div id="why-box" class="dialogue-box">
                 <h3 style="font-family:'Playfair Display'; color:var(--forest-deep); margin:0;">Why us...</h3>
                 <ul style="color: #444; font-size: 0.85rem; padding-left: 18px; margin-top: 12px; line-height: 1.4;">
@@ -183,7 +175,7 @@ button.main-action { width: 180px; padding: 16px; border: none; border-radius: 5
     <div id="main-container">
         <div class="card" id="main-card">
             <p style="font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: var(--sage-muted); margin-bottom: 10px; opacity: 0.8;">I know we can't meet this year but</p>
-            <h1 style="font-family:'Playfair Display', serif; color:var(--forest-deep); font-size:2.2rem; margin:0 0 20px 0;">Can I be your sin this valentine(and the rest of our lives)?</h1>
+            <h1 id="question-text" style="font-family:'Playfair Display', serif; color:var(--forest-deep); font-size:2.2rem; margin:0 0 20px 0;">Can I be your sin this valentine(and the rest of our lives)?</h1>
             <div style="display:flex; flex-direction:column; align-items:center;">
                 <button id="yes-btn" class="main-action">Yes!</button>
                 <button id="no-btn" class="main-action">No</button>
@@ -263,10 +255,7 @@ button.main-action { width: 180px; padding: 16px; border: none; border-radius: 5
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles = particles.filter(p => p.opacity > 0);
             particles.forEach(p => { p.update(); p.draw(); });
-            
-            if(isSuccess) {
-                fireflies.forEach(f => { f.update(); f.draw(); });
-            }
+            if(isSuccess) { fireflies.forEach(f => { f.update(); f.draw(); }); }
             requestAnimationFrame(animate);
         }
         animate();
@@ -305,33 +294,43 @@ button.main-action { width: 180px; padding: 16px; border: none; border-radius: 5
         const noBtn = document.getElementById('no-btn');
         const yesBtn = document.getElementById('yes-btn');
         let scale = 1;
-
         const loveMessages = ["Are you sure?", "Think again!", "Give it a chance!", "I'm persistent!", "Just click Yes!"];
 
         const teleportNo = () => {
-    // Calculate a random spot that isn't right where the mouse is
-    const padding = 100; // Keeps it away from edges
-    const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-    const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+            const padding = 100;
+            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+            noBtn.style.position = 'fixed';
+            const newX = Math.random() * maxX + (padding / 2);
+            const newY = Math.random() * maxY + (padding / 2);
+            noBtn.style.left = `${newX}px`;
+            noBtn.style.top = `${newY}px`;
 
-    noBtn.style.position = 'fixed';
-    
-    // Generate new coordinates
-    const newX = Math.random() * maxX + (padding / 2);
-    const newY = Math.random() * maxY + (padding / 2);
+            if (scale < 5) { 
+                scale += 0.4; 
+                yesBtn.style.transform = `scale(${scale})`;
+                const msgIndex = Math.min(Math.floor(scale - 1), loveMessages.length - 1);
+                yesBtn.innerText = loveMessages[msgIndex];
+            }
+        };
 
-    noBtn.style.left = `${newX}px`;
-    noBtn.style.top = `${newY}px`;
+        // Added missing Event Listeners
+        noBtn.addEventListener('mouseover', teleportNo);
+        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); teleportNo(); });
 
-    // Love Meter Scaling Logic
-    if (scale < 5) { 
-        scale += 0.4; 
-        yesBtn.style.transform = `scale(${scale})`;
-        const msgIndex = Math.min(Math.floor(scale - 1), loveMessages.length - 1);
-        yesBtn.innerText = loveMessages[msgIndex];
-    }
-};
-
+        yesBtn.addEventListener('click', () => {
+            isSuccess = true;
+            for(let i=0; i<40; i++) fireflies.push(new Firefly());
+            const card = document.getElementById('main-card');
+            card.style.opacity = '0';
+            setTimeout(() => {
+                card.innerHTML = `<h1 style="font-family:'Playfair Display'; color:var(--forest-deep); margin:0;">It's a date.</h1><p style="color:var(--sage-muted); margin-top:15px; font-weight:600;">I'll see you then.</p>`;
+                card.style.opacity = '1';
+                document.getElementById('pdf-link').style.display = 'flex';
+            }, 500);
+            document.body.style.transition = "background-color 2s ease";
+            document.body.style.backgroundColor = "#141c15";
+        });
 
         function toggleMusic() {
             const record = document.getElementById('vinyl-record');
